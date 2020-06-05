@@ -16,3 +16,14 @@
  * Note to self: demonstrate returning pointers that were on the stack!
  *
  */
+
+char *numToDay(int n)
+{
+	assert(0 <= n && n <= 6);
+    char *days[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+	return days[n];
+}
+
+int main(int argc, char** argv) {
+    printf("%s\n", numToDay(atoi(argv[1])));
+}

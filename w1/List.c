@@ -14,8 +14,11 @@ struct _IntListWrapperRep {
 
 static IntListNode newIntListNode(int data)
 {
-    /* Todo :) */
-    return NULL;
+    IntListNode newNode = malloc(sizeof(struct _IntListNodeRep));
+    if (newNode == NULL) return newNode;
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
 }
 
 IntList IntListCreate()
@@ -31,13 +34,11 @@ void IntListAppend(IntList L, int v)
 {
     IntListNode newNode = newIntListNode(v);
 
-    // This line should check if the list is empty, what does it actually do?
-    if (L == NULL) {
-        // What's wrong with line 28?
-        L = newNode;
+    if (L->first == NULL) {
+        L->first = newNode;
         L->size++;
     } else {
-        // What's wrong/missing with line 32?
+        L->last->next = newNode;
         L->last = newNode;
     }
 }
@@ -48,10 +49,17 @@ int IntListSumIter(IntList L)
     return 0;
 }
 
-int IntListSumRec(IntList L)
+int IntListSumRecHelper(IntListNode l) 
 {
-    /* Todo in tutorial :) */
-    return 0;
+    // Base case "given a list, can I give back an answer immediately?"
+    if (l == NULL) return 0;
+    // General/Recursive case:
+    return l->data + IntListSumRecHelper(l->next);
+}
+
+int IntListSumRec(IntList L)
+{ 
+    return IntListSumRecHelper(L->first);
 }
 
 void IntListInsertNth(IntList L, int v, int pos)

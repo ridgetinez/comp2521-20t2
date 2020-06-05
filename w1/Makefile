@@ -3,7 +3,7 @@
 # (2) At a certain point, some projects are too large to compile by hand.
 # (3) Standardised "language" that everyone can learn and bring with them project to project
 
-CC=gcc
+CC=gcc 
 CFLAGS=-Wall -Werror
 
 # Generating executables that depend on other targets like list.o
@@ -14,6 +14,9 @@ test: testList.c List.o
 # Generating intermediary object files can be automatically inferred by Make :)
 List.o: List.c List.h
 	$(CC) $(CFLAGS) -c List.c List.h
+
+numToDay: numToDay.c
+	$(CC) -o numToDay numToDay.c
 
 # Phony targets are targets that don't generate any new files / artifacts
 .PHONY: clean
