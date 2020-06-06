@@ -35,7 +35,7 @@ void IntListAppend(IntList L, int v)
     IntListNode newNode = newIntListNode(v);
 
     if (L->first == NULL) {
-        L->first = newNode;
+        L->first = L->last = newNode;
         L->size++;
     } else {
         L->last->next = newNode;
