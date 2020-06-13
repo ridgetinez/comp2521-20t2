@@ -34,15 +34,46 @@ void append(struct sparse_vec *v, double data, int pos) {
 }
 
 // Denote N to be the length of A, and M be the length of B. What's the time complexity of this function?
+// A: O(M+N) (followup: why can't we just say it's O(n)?)
 struct sparse_vec *add_sparse_vecs(struct sparse_vec *a, struct sparse_vec *b) {
+    // We only define vector addition on vectors that have same dimension i.e. two vectors from R^3,
+    // but not one from R^3 and another from R^4.
     if (a->dimension != b->dimension) return NULL;
     struct sparse_vec *v = create_sparse_vec(a->dimension);
     struct vec_node *curr_a = a->first, *curr_b = b->first;
 
-    ////////////// ////////////// ////////////// ////////////// //////////////
-    // Implement me below !
-    ////////////// ////////////// ////////////// ////////////// //////////////
+    // A and B are sorted by the position in which their non-zero elements appear.
+    // We can walk pointers and check if their positions are equal.
+    // What do we do when they're equal?
+    //      Well this means that they should be added together! Being careful to not append if their sum is 0,
+    //      Since we don't add zeroes into our sparse vector representation.
+    // Okay, they're not equal, the position of one is smaller than the other?
+    //      The smaller one is being added with zero, so we can append the smaller one to the new vector as it is.
+    // Why can we just add to the end?
+    //      If the position of one is smaller, then in the other list we've past any hope of finding a non-zero
+    //      element at the same position. This is because our vectors are sorted by position.
+    while (curr_a != NULL && curr_b != NULL) {
+        if (curr_a->pos < curr_b->pos) {
+            append(v, curr_a->data, curr_a->pos);
+            curr_a = curr_a->next;
+        } else if (curr_a->pos > curr_b->pos) {
+            append(v, curr_b->data, curr_b->pos);
+            curr_b = curr_b->next;
+        } else {
+            if (curr_b->data + curr_a->data != 0) {
+                append(v, curr_b->data + curr_a->data, curr_b->pos);
+            }
+            curr_a = curr_a->next;
+            curr_b = curr_b->next;
+        }
+    }
 
+    // The loop above us is (curr_a != NULL && curr_b != NULL). We exit the loop when the condition is false:
+    // !(curr_a != NULL && curr_b != NULL) ====> curr_a == NULL || curr_b == NULL
+    // Ahh! So we might still have elements remaining in one. Since the other list doesn't have any elements
+    // we'll just append to the end of the new vector.
+    while (curr_a != NULL) { append(v, curr_a->data, curr_a->pos); curr_a = curr_a->next; }
+    while (curr_b != NULL) { append(v, curr_b->data, curr_b->pos); curr_b = curr_b->next; }
     return v;
 }
 

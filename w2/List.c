@@ -49,10 +49,12 @@ int IntListSumIter(IntList L)
     return 0;
 }
 
-
 static int IntListLengthRecHelper(IntListNode l)
 {
-    /* WEEK 2 IMPLEMENT ME! */
+    /* Base Case */
+    if (l == NULL) return 0;
+    /* General Case */
+    return 1 + IntListLengthRecHelper(l->next);
 }
 
 int IntListLength(IntList L)
